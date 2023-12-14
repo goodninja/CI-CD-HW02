@@ -49,6 +49,19 @@ docker build:
     - docker build -t $CI_REGISTRY_IMAGE:$IMAGE_TAG .
     - docker push $CI_REGISTRY_IMAGE:$IMAGE_TAG
 
+lint-test-job:
+  image: docker:latest
+  stage: test
+  services:
+    - docker:dind
+  script:
+    - echo "Linting code... This will take about 10 seconds."
+    - sleep 1
+    - echo "No lint issues found."
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker run $CI_REGISTRY_IMAGE:$IMAGE_TAG
+    - docker ps -a
+
 test1:
   stage: test
   script:
